@@ -1,7 +1,7 @@
 # Particle Madness
 Computational Graphics course, University of Zagreb, Lab 3.
 
-![example.png](https://raw.githubusercontent.com/deluksic/particle-madness/master/docs/example.png | width=400px)
+<img src="https://raw.githubusercontent.com/deluksic/particle-madness/master/docs/example.png" width="400">
 
 # Developing localy
 Clone repo
