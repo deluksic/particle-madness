@@ -35,7 +35,8 @@ export class Simulation {
 
     constructor(
         renderer: THREE.WebGLRenderer,
-        partCount = 500
+        partCount = 700,
+        forceResolution = { x: 512, y: 512 }
     ) {
         this.renderer = renderer;
         this.renderer.autoClear = false;
@@ -49,7 +50,7 @@ export class Simulation {
         this.posRenderTarget = particlePositionRenderTarget(this.partCount);
         this.maxPartCount = this.posRenderTarget.width * this.posRenderTarget.height;
         this.computeForceRenderTarget = new THREE.WebGLRenderTarget(
-            renderer.domElement.width, renderer.domElement.height, {
+            forceResolution.x, forceResolution.y, {
                 format: THREE.RGBAFormat,
                 type: THREE.FloatType
             }
@@ -82,7 +83,8 @@ export class Simulation {
         this.pointsGeometry = new THREE.BufferGeometry();
         this.pointsGeometry.setFromPoints(getParticlesTexturePositions(this.partCount));
         this.computeForceMaterial = new ParticleForceMaterial({
-            size: { value: 128 }
+            size: { value: 50 },
+            centerRadius: { value: 1 }
         });
         this.mouseForceMaterial = new MouseForceMaterial({
             size: { value: 0.3 }
@@ -97,7 +99,10 @@ export class Simulation {
         this.mouseForcePass.needsSwap = true;
         this.computeForcePass = new THREE.RenderPass(this.scene, this.camera);
         this.computeForcePass.needsSwap = false
-        this.isoSurfaceMaterial = new IsoSurfaceMaterial({});
+        this.isoSurfaceMaterial = new IsoSurfaceMaterial({
+            low: { value: 1.5 },
+            high: { value: 2 }
+        });
         this.computeForce.addPass(new (THREE as any).ClearPass(0x0, 0.0));
         this.computeForce.addPass(this.mouseForcePass);
         this.computeForce.addPass(this.computeForcePass);
@@ -111,7 +116,7 @@ export class Simulation {
             width: 350
         });
         let params = {
-            damping: 0.2
+            damping: 0.4
         };
         this.computeStepMaterial.setVelocityHalfLife(params.damping);
         gui.add(this, 'partCount', 1, this.maxPartCount).name("Particle count").onChange(() => this.setParticleCount(this.partCount));
