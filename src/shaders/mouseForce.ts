@@ -15,7 +15,7 @@ let mouseForceShader = {
         varying vec2 vUv;
 
         void main() {
-            vec2 toCenter = mouse - vUv;
+            vec2 toCenter = vUv - mouse;
             float dist = dot(toCenter, toCenter)/size/size;
             if (dist > 1.0) discard;
             dist = 1.5*(1.0-dist);

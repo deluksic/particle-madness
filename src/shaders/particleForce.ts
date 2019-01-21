@@ -29,8 +29,8 @@ let particleForceShader = {
             dist *= 4.0;
             dist = 1.5*(1.0-dist);
             vec2 force = magn*normalize(toCenter)*dist*dist;
-            force.x = -force.x;
-            force += velocityInfluence * vel;
+            force.y = -force.y;
+            force -= velocityInfluence * vel;
             gl_FragColor = vec4(force, 0.0, 1.0);
         }`
 };
@@ -51,8 +51,8 @@ export class ParticleForceMaterial extends THREE.ShaderMaterial {
             blending: THREE.AdditiveBlending
         });
         this.uniforms = {
-            magn: { value: 1 },
-            velocityInfluence: { value: 0 },
+            magn: { value: 1.0 },
+            velocityInfluence: { value: 0.0 },
             size: { value: 10 },
             centerRadius: { value: 2 },
             posTex: { value: undefined },
