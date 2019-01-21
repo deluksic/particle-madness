@@ -121,13 +121,13 @@ export class Simulation {
         this.computeStepMaterial.setVelocityHalfLife(params.damping);
         gui.add(this, 'partCount', 1, this.maxPartCount).name("Particle count").onChange(() => this.setParticleCount(this.partCount));
         gui.add(this.computeForceMaterial.uniforms.size, 'value', 1, 256).name("Force size");
-        gui.add(this.computeForceMaterial.uniforms.magn, 'value', 0, 4).name("Force magn");
+        gui.add(this.computeForceMaterial.uniforms.magn, 'value', 0.0, 4.0).name("Force magn");
         gui.add(this.computeForceMaterial.uniforms.velocityInfluence, 'value', 0, 10).name("Velocity influence");
-        gui.add(this.mouseForceMaterial.uniforms.size, 'value', 0, 1).name("Mouse force size");
-        gui.add(this.mouseForceMaterial.uniforms.magn, 'value', 0, 4).name("Mouse force magn");
-        gui.add(this.isoSurfaceMaterial.uniforms.low, 'value', 0, 4).name("Iso-surface low");
-        gui.add(this.isoSurfaceMaterial.uniforms.high, 'value', 0, 4).name("Iso-surface high");
-        gui.add(this.computeStepMaterial.uniforms.stepSize, 'value', 0, 0.1).name("Step size").onChange(() => this.recalcDamping(params.damping));
+        gui.add(this.mouseForceMaterial.uniforms.size, 'value', 0.0, 1.0).name("Mouse force size");
+        gui.add(this.mouseForceMaterial.uniforms.magn, 'value', 0.0, 4.0).name("Mouse force magn");
+        gui.add(this.isoSurfaceMaterial.uniforms.low, 'value', 0.0, 4.0).name("Iso-surface low");
+        gui.add(this.isoSurfaceMaterial.uniforms.high, 'value', 0.0, 4.0).name("Iso-surface high");
+        gui.add(this.computeStepMaterial.uniforms.stepSize, 'value', 0.0, 0.1).name("Step size").onChange(() => this.recalcDamping(params.damping));
         gui.add(params, 'damping', 0, 3).name("Velocity half life").onChange((d: number) => this.recalcDamping(d));
         gui.add(this, 'reset').name("Reset");
     }
