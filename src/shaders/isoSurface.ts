@@ -25,9 +25,13 @@ let isoSurfaceShader = {
             vec4 texel = texture2D(tDiffuse, vUv);
             float magnSq = dot(texel.xy, texel.xy);
             float dir = atan(texel.y, texel.x) / 3.14159 * 0.5;
-            if(magnSq < low*low) discard;
-            if(magnSq > high*high) discard;
-            gl_FragColor = vec4(hsv2rgb(vec3(dir, 1.0, 1.0)), 1.0);
+            float low2 = low*low;
+            float high2 = high*high;
+            if(magnSq < low2) discard;
+            if(magnSq > high2) discard;
+            // float k = (magnSq - low2) / (high2 - low2);
+            // gl_FragColor = vec4(hsv2rgb(vec3(dir, 1.0, mix(0.0, 1.0, k))), 1.0);
+            gl_FragColor = vec4(hsv2rgb(vec3(dir, 1.0, clamp(magnSq * 10.0, 0.0, 1.0))), 1.0);
         }`
 };
 
