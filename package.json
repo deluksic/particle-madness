@@ -1,0 +1,27 @@
+{
+  "name": "particle-life",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "David Emanuel Luksic",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack-dev-server -d --mode development --content-base ./public",
+    "build": "webpack -p --display-modules --mode=production",
+    "watch": "webpack --watch --mode=development"
+  },
+  "dependencies": {
+    "@types/dat.gui": "^0.7.2",
+    "@types/lodash": "^4.14.120",
+    "@types/node": "^10.12.18",
+    "@types/three": "^0.93.15",
+    "dat.gui": "^0.7.5",
+    "html-webpack-plugin": "^3.2.0",
+    "lodash": "^4.17.11",
+    "three": "^0.100.0",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.2.4",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1",
+    "webpack-dev-server": "^3.1.14"
+  }
+}
