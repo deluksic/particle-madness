@@ -32,6 +32,8 @@ export class Simulation {
     public computeForceRenderTarget: THREE.WebGLRenderTarget;
     public computeForceMaterial: ParticleForceMaterial;
     public isoSurfaceMaterial: IsoSurfaceMaterial;
+    public isoSurfacePass: THREE.Pass;
+    public renderForcesPass: THREE.Pass;
 
     constructor(
         renderer: THREE.WebGLRenderer,
@@ -83,8 +85,9 @@ export class Simulation {
         this.pointsGeometry = new THREE.BufferGeometry();
         this.pointsGeometry.setFromPoints(getParticlesTexturePositions(this.partCount));
         this.computeForceMaterial = new ParticleForceMaterial({
+            magn: { value: 1 },
             size: { value: 50 },
-            centerRadius: { value: 1 }
+            centerRadius: { value: 1.5 }
         });
         this.mouseForceMaterial = new MouseForceMaterial({
             size: { value: 0.3 }
@@ -106,17 +109,22 @@ export class Simulation {
         this.computeForce.addPass(new (THREE as any).ClearPass(0x0, 0.0));
         this.computeForce.addPass(this.mouseForcePass);
         this.computeForce.addPass(this.computeForcePass);
-        let pass = new THREE.ShaderPass(this.isoSurfaceMaterial);
-        pass.needsSwap = false;
-        this.computeForce.addPass(pass);
-
-        _.last(this.computeForce.passes).renderToScreen = true;
+        this.isoSurfacePass = new THREE.ShaderPass(this.isoSurfaceMaterial);
+        this.isoSurfacePass.needsSwap = false;
+        this.isoSurfacePass.renderToScreen = true;
+        this.renderForcesPass = new THREE.ShaderPass(THREE.CopyShader);
+        this.renderForcesPass.needsSwap = false;
+        this.renderForcesPass.enabled = false;
+        this.renderForcesPass.renderToScreen = true;
+        this.computeForce.addPass(this.renderForcesPass);
+        this.computeForce.addPass(this.isoSurfacePass);
 
         let gui = new GUI({
             width: 350
         });
         let params = {
-            damping: 0.4
+            damping: 0.4,
+            isoSurface: true
         };
         this.computeStepMaterial.setVelocityHalfLife(params.damping);
         gui.add(this, 'partCount', 1, this.maxPartCount).name("Particle count").onChange(() => this.setParticleCount(this.partCount));
@@ -125,6 +133,10 @@ export class Simulation {
         gui.add(this.computeForceMaterial.uniforms.velocityInfluence, 'value', 0, 10, 0.01).name("Velocity influence");
         gui.add(this.mouseForceMaterial.uniforms.size, 'value', 0.0, 1.0).name("Mouse force size");
         gui.add(this.mouseForceMaterial.uniforms.magn, 'value', -4.0, 4.0).name("Mouse force magn");
+        gui.add(params, 'isoSurface').name("Render iso-surface").onChange((bool) => {
+            this.isoSurfacePass.enabled = bool;
+            this.renderForcesPass.enabled = !bool;
+        });
         gui.add(this.isoSurfaceMaterial.uniforms.low, 'value', 0.0, 4.0).name("Iso-surface low");
         gui.add(this.isoSurfaceMaterial.uniforms.high, 'value', 0.0, 4.0).name("Iso-surface high");
         gui.add(this.computeStepMaterial.uniforms.stepSize, 'value', 0.0, 0.1).name("Step size").onChange(() => this.recalcDamping(params.damping));
